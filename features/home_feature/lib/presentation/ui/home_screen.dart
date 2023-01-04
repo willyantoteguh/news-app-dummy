@@ -12,6 +12,7 @@ import 'package:home/domains/entity/static/news_category.dart';
 import 'package:home_feature/presentation/bisnis_bloc/bisnis_cubit.dart';
 import 'package:home_feature/presentation/headline_bloc/headline_cubit.dart';
 import 'package:home_feature/presentation/headline_bloc/headline_state.dart';
+import 'package:dependencies/timeago/timeago_formater.dart' as timeago;
 import 'package:theme/theme/new_theme.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,6 +24,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<NewsCategory> listCategoryNews = [];
+
+  //// Slider
   CarouselController carouselController = CarouselController();
   int _current = 0;
 
@@ -67,14 +70,22 @@ class _HomeScreenState extends State<HomeScreen> {
               physics: BouncingScrollPhysics(),
               child: BlocBuilder<HeadlineCubit, HeadlineState>(builder: (context, state) {
                 final status = state.headlineState.status;
-                List<ArticleEntity> listImgSlider = state.headlineState.data ?? [];
-                List<ArticleEntity> listImages = listImgSlider.sublist(0, 5);
+
+                final listData = state.headlineState.data ?? [];
+                List<ArticleEntity> listImages = (listData.isNotEmpty) ? listData.sublist(0, 5) : [];
+                var time;
 
                 if (status.isLoading) {
-                  return Center(child: CircularProgressIndicator.adaptive(backgroundColor: ColorName.redColor));
+                  return Expanded(
+                    child: Center(child: CircularProgressIndicator.adaptive(backgroundColor: ColorName.redColor)),
+                  );
                 } else if (status.isError) {
                   return Dialog(
-                    child: Text(state.headlineState.failure!.errorMessage),
+                    insetAnimationDuration: Duration(seconds: 5),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 24.h),
+                      child: Text(state.headlineState.failure!.errorMessage),
+                    ),
                   );
                 } else {
                   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -129,6 +140,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             });
                           }),
                       items: listImages.map<Widget>((e) {
+                        //// Formatter
+                        time = DateTime.parse(e.publishedAt);
+
                         return Container(
                           child: Stack(
                             children: [
@@ -136,11 +150,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 // margin: EdgeInsets.all(8.w),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10.w),
-                                  // color: ColorName.redColor,
-                                  // image: DecorationImage(
-                                  //   image: NetworkImage(e.urlToImage),
-                                  //   fit: BoxFit.cover,
-                                  // ),
+                                  color: ColorName.redColor,
+                                  image: DecorationImage(
+                                    image: NetworkImage(e.urlToImage),
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                               Container(
@@ -157,8 +171,36 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Padding(
                                   padding: EdgeInsets.all(8.w),
                                   child: Text(
-                                    e.publishedAt,
+                                    timeago.format(time, locale: 'ID'),
                                     style: BaseText.whiteTextStyle,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                left: 0,
+                                bottom: 0,
+                                right: 0,
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 10.h),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(10.w),
+                                      bottomRight: Radius.circular(10.w),
+                                    ),
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Colors.transparent,
+                                        ColorName.blackColor.withOpacity(0.5),
+                                      ],
+                                      begin: Alignment.topRight,
+                                      end: Alignment.bottomLeft,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    e.title,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.fade,
+                                    style: BaseText.whiteTextStyle.copyWith(fontWeight: BaseText.medium, fontSize: 14.sp),
                                   ),
                                 ),
                               ),
@@ -182,6 +224,53 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       }).toList(),
                     ),
+                    SizedBox(height: 10.h),
+                    Container(
+                      child: ListView.builder(
+                          physics: BouncingScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: listData.length,
+                          itemBuilder: (context, index) {
+                            var item = listData[index];
+                            final timeNew = DateTime.parse(item.publishedAt);
+
+                            return Container(
+                              width: ScreenUtil().screenWidth,
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.only(top: 10.h),
+                                    height: 100.h,
+                                    width: 125.w,
+                                    child: Image.network(
+                                      item.urlToImage,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Container(
+                                    width: ScreenUtil().screenWidth / 2,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(11.w),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            item.title,
+                                            style: BaseText.blackTextStyle.copyWith(),
+                                          ),
+                                          SizedBox(height: 40.h),
+                                          Text(
+                                            timeago.format(time, locale: 'ID'),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            );
+                          }),
+                    )
                   ]);
                 }
               }),

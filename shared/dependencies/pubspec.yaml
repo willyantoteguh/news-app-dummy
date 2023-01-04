@@ -23,6 +23,7 @@ dependencies:
   get_storage: any
   sembast: any
   sembast_web: any        
+  timeago: ^3.3.0
 
 dev_dependencies:
   flutter_test:
