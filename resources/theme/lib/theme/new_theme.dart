@@ -9,6 +9,7 @@ class ColorName {
   static const Color greyColor = Color(0xffA4A8AE);
   static const Color lightGreyColor = Color(0xffF1F1F9);
   static const Color lightBackgroundColor = Color(0xffF6F8FB);
+  static const Color lightSelectedColor = Color(0xFFE4E4E4);
   static const Color darkBackgroundColor = Color(0xff020518);
   static const Color blueColor = Color(0xff53C1F9);
   static Color purpleColor = (Colors.purple).shade900;
