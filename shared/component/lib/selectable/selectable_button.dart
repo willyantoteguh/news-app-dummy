@@ -9,9 +9,15 @@ class SelectableButton extends StatelessWidget {
   final double height;
   final String text;
   final Function onTap;
-  final TextStyle textStyle;
 
-  SelectableButton(this.text, {this.isSelected = false, this.isEnabled = true, this.width = 144, this.height = 60, required this.onTap, required this.textStyle});
+  SelectableButton(
+    this.text, {
+    this.isSelected = false,
+    this.isEnabled = true,
+    this.width = 144,
+    this.height = 60,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +28,7 @@ class SelectableButton extends StatelessWidget {
         child: Container(
           width: width,
           height: height,
+          margin: EdgeInsets.only(left: 10.w, top: 10.h),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6),
               color: (!isEnabled)
@@ -35,7 +42,9 @@ class SelectableButton extends StatelessWidget {
                       : isSelected
                           ? Colors.transparent
                           : ColorName.lightSelectedColor)),
-          child: Center(child: Text(text ?? "None", style: (textStyle ?? BaseText.blackTextStyle).copyWith(fontSize: 16.sp, fontWeight: FontWeight.w400))),
+          child: Center(
+              child: Text(text,
+                  style: isSelected ? BaseText.whiteTextStyle.copyWith(fontSize: 16.sp, fontWeight: BaseText.black) : BaseText.blackTextStyle.copyWith(fontSize: 16.sp, fontWeight: BaseText.black))),
         ));
   }
 }

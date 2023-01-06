@@ -1,4 +1,4 @@
-name: home_feature
+name: discovery
 description: A new Flutter package project.
 version: 0.0.1
 publish_to: none
@@ -15,9 +15,9 @@ dependencies:
   home:
     path: ../../domains/home
 
-  # Feature
-  discovery:
-    path: ../../features/discovery  
+  # Features
+  home_feature:  
+    path: ../../features/home_feature
 
   common:
     path: ../../shared/common
@@ -28,7 +28,7 @@ dependencies:
   dependencies:
     path: ../../shared/dependencies   
   theme:
-    path: ../../resources/theme         
+    path: ../../resources/theme           
 
 dev_dependencies:
   flutter_test:

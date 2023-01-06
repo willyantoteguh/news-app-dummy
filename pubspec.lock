@@ -113,6 +113,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.6"
+  discovery:
+    dependency: transitive
+    description:
+      path: "features/discovery"
+      relative: true
+    source: path
+    version: "0.0.1"
   equatable:
     dependency: transitive
     description:
@@ -448,6 +455,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.9"
+  textfield_search:
+    dependency: transitive
+    description:
+      name: textfield_search
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.10.0"
   theme:
     dependency: transitive
     description:

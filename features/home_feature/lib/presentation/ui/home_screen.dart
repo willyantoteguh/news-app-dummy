@@ -23,11 +23,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<NewsCategory> listCategoryNews = [
-    NewsCategory(0, 'Semua', isSelected: true),
-    NewsCategory(1, 'Bisnis'),
-    NewsCategory(2, 'Hiburan'),
-    NewsCategory(3, 'Olahraga'),
-    NewsCategory(4, 'Kesehatan'),
+    NewsCategory(0, 'Semua', 'general', isSelected: true),
+    NewsCategory(1, 'Bisnis', 'business'),
+    NewsCategory(2, 'Hiburan', 'entertainment'),
+    NewsCategory(3, 'Olahraga', 'health'),
+    NewsCategory(4, 'Kesehatan', 'sports'),
   ];
   String selectedCategory = '';
 
@@ -46,24 +46,28 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future getSemuaNews(BuildContext context) async {
-    context.read<CategoryCubit>().getSemua();
+    HomeRequestEntity params = HomeRequestEntity(q: '', category: 'general', language: 'id', pageSize: 10, page: 1);
+    context.read<CategoryCubit>().getSemua(params: params);
   }
 
   Future getBisnisNews(BuildContext context) async {
-    HomeRequestEntity params = HomeRequestEntity(q: 'bisnis', language: 'id', pageSize: 10, page: 1);
-    context.read<CategoryCubit>().getBisnis(params);
+    HomeRequestEntity params = HomeRequestEntity(q: '', category: 'business', language: 'id', pageSize: 10, page: 1);
+    context.read<CategoryCubit>().getBisnis(params: params);
   }
 
-  void getHiburanNews(BuildContext context) async {
-    context.read<CategoryCubit>().getHiburan();
+  Future getHiburanNews(BuildContext context) async {
+    HomeRequestEntity params = HomeRequestEntity(q: '', category: 'entertainment', language: 'id', pageSize: 10, page: 1);
+    context.read<CategoryCubit>().getHiburan(params: params);
   }
 
-  void getKesehatanNews(BuildContext context) async {
-    context.read<CategoryCubit>().getKesehatan();
+  Future getKesehatanNews(BuildContext context) async {
+    HomeRequestEntity params = HomeRequestEntity(q: '', category: 'health', language: 'id', pageSize: 10, page: 1);
+    context.read<CategoryCubit>().getKesehatan(params: params);
   }
 
-  void getOlahragaNews(BuildContext context) async {
-    context.read<CategoryCubit>().getOlahraga();
+  Future getOlahragaNews(BuildContext context) async {
+    HomeRequestEntity params = HomeRequestEntity(q: '', category: 'sports', language: 'id', pageSize: 10, page: 1);
+    context.read<CategoryCubit>().getOlahraga(params: params);
   }
 
   @override

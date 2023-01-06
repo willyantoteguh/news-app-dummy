@@ -16,7 +16,7 @@ class Api {
 
   String get homeAll => 'top-headlines?';
 
-  String get homeByCategory => 'everything?';
+  String get homeByCategory => 'top-headlines?';
 }
 
 class ApiKey {

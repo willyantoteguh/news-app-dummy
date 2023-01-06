@@ -1,4 +1,5 @@
 import 'package:dependencies/bloc/bloc.dart';
+import 'package:discovery/presentation/ui/discovery_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,9 +22,7 @@ class BottomNavigation extends StatelessWidget {
             index: context.read<HomeCubit>().state.homeState.data,
             children: [
               HomeScreen(),
-              Center(
-                child: Text('Discover'),
-              ),
+              DiscoveryScreen(),
               Center(
                 child: Text('Favorite'),
               ),

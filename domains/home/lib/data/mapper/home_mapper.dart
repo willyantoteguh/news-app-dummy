@@ -27,6 +27,7 @@ class HomeMapper {
 
   HomeRequestDto mapHomeRequestEntityToHomeRequestDto(HomeRequestEntity homeRequestEntity) => HomeRequestDto(
         q: homeRequestEntity.q,
+        category: homeRequestEntity.category,
         language: homeRequestEntity.language,
         pageSize: homeRequestEntity.pageSize,
         page: homeRequestEntity.page,

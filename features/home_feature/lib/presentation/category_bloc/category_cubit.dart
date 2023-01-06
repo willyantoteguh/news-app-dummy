@@ -36,8 +36,7 @@ class CategoryCubit extends Cubit<CategoryState> {
           ),
         );
   //// SEMUA NEWS
-  void getSemua() async {
-    HomeRequestEntity params = HomeRequestEntity(q: '', language: 'id', pageSize: 10, page: 1);
+  void getSemua({required HomeRequestEntity params}) async {
     emit(state.copyWith(semuaState: ViewData.loading(message: 'All News Loading....')));
 
     final result = await getHeadlineNewsUseCase.call(params);
@@ -56,7 +55,7 @@ class CategoryCubit extends Cubit<CategoryState> {
   }
 
   //// BISNIS NEWS
-  void getBisnis(HomeRequestEntity params) async {
+  void getBisnis({required HomeRequestEntity params}) async {
     emit(state.copyWith(bisnisState: ViewData.loading(message: 'Loading..')));
 
     final result = await getBisnisNewsUseCase.call(params);
@@ -75,10 +74,9 @@ class CategoryCubit extends Cubit<CategoryState> {
   }
 
   //// HIBURAN NEWS
-  void getHiburan() async {
+  void getHiburan({required HomeRequestEntity params}) async {
     emit(state.copyWith(hiburanState: ViewData.loading(message: 'Loading..')));
 
-    HomeRequestEntity params = HomeRequestEntity(q: 'hiburan', language: 'id', pageSize: 10, page: 1);
     final result = await getHiburanNewsUseCase.call(params);
 
     return result.fold((failure) => _onFailureHiburan(failure), (data) => _onSuccessHiburan(data));
@@ -95,10 +93,9 @@ class CategoryCubit extends Cubit<CategoryState> {
   }
 
   //// KESEHATAN NEWS
-  void getKesehatan() async {
+  void getKesehatan({required HomeRequestEntity params}) async {
     emit(state.copyWith(kesehatanState: ViewData.loading(message: 'Loading..')));
 
-    HomeRequestEntity params = HomeRequestEntity(q: 'kesehatan', language: 'id', pageSize: 10, page: 1);
     final result = await getKesehatanNewsUseCase.call(params);
 
     return result.fold((failure) => _onFailureKesehatan(failure), (data) => _onSuccessKesehatan(data));
@@ -115,10 +112,9 @@ class CategoryCubit extends Cubit<CategoryState> {
   }
 
   //// OLAHRAGA NEWS
-  void getOlahraga() async {
+  void getOlahraga({required HomeRequestEntity params}) async {
     emit(state.copyWith(olahragaState: ViewData.loading(message: 'Loading..')));
 
-    HomeRequestEntity params = HomeRequestEntity(q: 'olahraga', language: 'id', pageSize: 10, page: 1);
     final result = await getOlahragaNewsUseCase.call(params);
 
     return result.fold((failure) => _onFailureOlahraga(failure), (data) => _onSuccessOlahraga(data));
