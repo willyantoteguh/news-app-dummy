@@ -1,3 +1,4 @@
+import 'package:common/utils/di/common_dependencies.dart';
 import 'package:core/di/dependency.dart';
 import 'package:home/di/dependency.dart';
 
@@ -13,5 +14,6 @@ class Injections {
 
   Future<void> _registerSharedDependencies() async {
     RegisterCoreModule();
+    CommonDependencies();
   }
 }

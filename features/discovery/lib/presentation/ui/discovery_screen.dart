@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:common/utils/helper/helper.dart';
+import 'package:common/utils/navigation/argument/argument.dart';
 import 'package:common/utils/state/view_data_state.dart';
+import 'package:component/base/home/base_home.dart';
 import 'package:component/selectable/selectable_button.dart';
 import 'package:dependencies/bloc/bloc.dart';
 import 'package:dependencies/screenutil/flutter_screenutil.dart';
@@ -21,7 +23,7 @@ class DiscoveryScreen extends StatefulWidget {
   State<DiscoveryScreen> createState() => _DiscoveryScreenState();
 }
 
-class _DiscoveryScreenState extends State<DiscoveryScreen> {
+class _DiscoveryScreenState extends State<DiscoveryScreen> with BaseHome {
   List<NewsCategory> listCategoryNews = [
     NewsCategory(0, 'Semua', 'general'),
     NewsCategory(1, 'Bisnis', 'business'),
@@ -50,6 +52,13 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
     log(category);
     HomeRequestEntity params = HomeRequestEntity(q: query, category: category, language: 'id', pageSize: 10, page: 1);
     context.read<CategoryCubit>().getSemua(params: params);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    searchController.dispose();
   }
 
   @override
@@ -167,54 +176,64 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
                                           child: CircularProgressIndicator.adaptive(),
                                         );
                                       } else {
-                                        return Container(
-                                          margin: EdgeInsets.only(bottom: 20.h),
-                                          child: Row(
-                                            children: [
-                                              (item.urlToImage.isEmpty || item.urlToImage == '///')
-                                                  ? Container(
-                                                      padding: EdgeInsets.only(top: 10.h),
-                                                      height: 100.h,
-                                                      width: 125.w,
-                                                      color: ColorName.lightBackgroundColor,
-                                                      child: Center(child: Text("Image Not Found")),
-                                                    )
-                                                  : Container(
-                                                      padding: EdgeInsets.only(top: 10.h),
-                                                      height: 100.h,
-                                                      width: 125.w,
-                                                      child: Image.network(
-                                                        item.urlToImage,
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                              Container(
-                                                height: 130,
-                                                width: ScreenUtil().screenWidth / 2,
-                                                child: Padding(
-                                                  padding: EdgeInsets.all(11.w),
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      SizedBox(
-                                                        height: 85,
-                                                        width: ScreenUtil().screenWidth / 2,
-                                                        child: Text(
-                                                          item.title,
-                                                          overflow: TextOverflow.fade,
-                                                          style: BaseText.blackTextStyle.copyWith(),
+                                        return InkWell(
+                                          onTap: () {
+                                            toWebview(
+                                              WebviewArgument(
+                                                title: item.title,
+                                                url: item.url,
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                            margin: EdgeInsets.only(bottom: 20.h),
+                                            child: Row(
+                                              children: [
+                                                (item.urlToImage.isEmpty || item.urlToImage == '///')
+                                                    ? Container(
+                                                        padding: EdgeInsets.only(top: 10.h),
+                                                        height: 100.h,
+                                                        width: 125.w,
+                                                        color: ColorName.lightBackgroundColor,
+                                                        child: Center(child: Text("Image Not Found")),
+                                                      )
+                                                    : Container(
+                                                        padding: EdgeInsets.only(top: 10.h),
+                                                        height: 100.h,
+                                                        width: 125.w,
+                                                        child: Image.network(
+                                                          item.urlToImage,
+                                                          fit: BoxFit.cover,
                                                         ),
                                                       ),
-                                                      // SizedBox(height: 20.h),
-                                                      Spacer(),
-                                                      Text(
-                                                        timeago.format(timeNew, locale: 'ID'),
-                                                      )
-                                                    ],
+                                                Container(
+                                                  height: 130,
+                                                  width: ScreenUtil().screenWidth / 2,
+                                                  child: Padding(
+                                                    padding: EdgeInsets.all(11.w),
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        SizedBox(
+                                                          height: 85,
+                                                          width: ScreenUtil().screenWidth / 2,
+                                                          child: Text(
+                                                            item.title,
+                                                            overflow: TextOverflow.fade,
+                                                            style: BaseText.blackTextStyle.copyWith(),
+                                                          ),
+                                                        ),
+                                                        // SizedBox(height: 20.h),
+                                                        Spacer(),
+                                                        Text(
+                                                          timeago.format(timeNew, locale: 'ID'),
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
-                                                ),
-                                              )
-                                            ],
+                                                )
+                                              ],
+                                            ),
                                           ),
                                         );
                                       }
@@ -297,6 +316,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
     category = '';
     listData.clear();
     isAnyResult = false;
+    searchController.clear();
   }
 
   void selectCategory(String value) {

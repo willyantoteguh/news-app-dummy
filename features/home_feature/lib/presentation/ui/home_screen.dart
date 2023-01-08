@@ -123,7 +123,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       listData = state.semuaState.data ?? [];
                     }
 
-                    List<ArticleEntity> listCurrentCategory = (listData.isNotEmpty) ? listData.sublist(0, 5) : [];
+                    List<ArticleEntity> listCurrentCategory = (listData.length < 5)
+                        ? listData
+                        : (listData.isNotEmpty)
+                            ? listData.sublist(0, 5)
+                            : [];
                     var time;
 
                     log(listData.map((e) => e.author).toList().toString());
@@ -134,7 +138,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     }
 
-                    return buildNews(listCurrentCategory, time, context, listData, carouselController, _current);
+                    return BuildNewsWidget(
+                      listCurrentCategory: listCurrentCategory,
+                      time: time,
+                      context: context,
+                      listData: listData,
+                      carouselController: carouselController,
+                      current: _current,
+                    );
 
                     // else if (status.isError) {
                     //   return Dialog(

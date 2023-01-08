@@ -1,3 +1,5 @@
+import 'package:common/utils/navigation/argument/webview_argument/webview_argument.dart';
+import 'package:component/base/home/base_home.dart';
 import 'package:dependencies/screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:common/utils/state/view_data_state.dart';
@@ -9,18 +11,36 @@ import 'package:home/domains/entity/response/article_entity.dart';
 import 'package:theme/theme/new_theme.dart';
 import 'package:dependencies/timeago/timeago_formater.dart' as timeago;
 
-Widget buildNews(
-  List<ArticleEntity> listCurrentCategory,
-  time,
-  BuildContext context,
-  List<ArticleEntity> listData,
-  carouselController,
-  int current,
-) {
-  return StatefulBuilder(builder: (context, setState) {
+import 'package:flutter/material.dart';
+
+class BuildNewsWidget extends StatefulWidget {
+  List<ArticleEntity> listCurrentCategory;
+  dynamic time;
+  BuildContext context;
+  List<ArticleEntity> listData;
+  CarouselController carouselController;
+  int current;
+
+  BuildNewsWidget({
+    Key? key,
+    required this.listCurrentCategory,
+    this.time,
+    required this.context,
+    required this.listData,
+    required this.carouselController,
+    required this.current,
+  }) : super(key: key);
+
+  @override
+  State<BuildNewsWidget> createState() => _BuildNewsWidgetState();
+}
+
+class _BuildNewsWidgetState extends State<BuildNewsWidget> with BaseHome {
+  @override
+  Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       CarouselSlider(
-        carouselController: carouselController,
+        carouselController: widget.carouselController,
         options: CarouselOptions(
             height: 200,
             aspectRatio: 16 / 9,
@@ -36,12 +56,12 @@ Widget buildNews(
             enlargeFactor: 0.3,
             onPageChanged: (index, reason) {
               setState(() {
-                current = index;
+                widget.current = index;
               });
             }),
-        items: listCurrentCategory.map<Widget>((e) {
+        items: widget.listCurrentCategory.map<Widget>((e) {
           //// Formatter
-          time = DateTime.parse(e.publishedAt);
+          widget.time = DateTime.parse(e.publishedAt);
 
           return Container(
             child: Stack(
@@ -78,7 +98,7 @@ Widget buildNews(
                   child: Padding(
                     padding: EdgeInsets.all(8.w),
                     child: Text(
-                      timeago.format(time, locale: 'ID'),
+                      timeago.format(widget.time, locale: 'ID'),
                       style: BaseText.whiteTextStyle,
                     ),
                   ),
@@ -118,14 +138,15 @@ Widget buildNews(
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: listCurrentCategory.asMap().entries.map((entry) {
+        children: widget.listCurrentCategory.asMap().entries.map((entry) {
           return GestureDetector(
-            onTap: () => carouselController.animateToPage(entry.key),
+            onTap: () => widget.carouselController.animateToPage(entry.key),
             child: Container(
               width: 12.0,
               height: 12.0,
               margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-              decoration: BoxDecoration(shape: BoxShape.circle, color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black).withOpacity(current == entry.key ? 0.9 : 0.4)),
+              decoration:
+                  BoxDecoration(shape: BoxShape.circle, color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black).withOpacity(widget.current == entry.key ? 0.9 : 0.4)),
             ),
           );
         }).toList(),
@@ -135,57 +156,74 @@ Widget buildNews(
         child: ListView.builder(
             physics: BouncingScrollPhysics(),
             shrinkWrap: true,
-            itemCount: listData.length,
+            itemCount: widget.listData.length,
             itemBuilder: (context, index) {
-              var item = listData[index];
+              var item = widget.listData[index];
               final timeNew = DateTime.parse(item.publishedAt);
 
-              return Container(
-                width: ScreenUtil().screenWidth,
-                child: Row(
-                  children: [
-                    (item.urlToImage.isEmpty || item.urlToImage == '///')
-                        ? Container(
-                            padding: EdgeInsets.only(top: 10.h),
-                            height: 100.h,
-                            width: 125.w,
-                            color: ColorName.lightBackgroundColor,
-                            child: Center(child: Text("Image Not Found")),
-                          )
-                        : Container(
-                            padding: EdgeInsets.only(top: 10.h),
-                            height: 100.h,
-                            width: 125.w,
-                            child: Image.network(
-                              item.urlToImage,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                    Container(
-                      width: ScreenUtil().screenWidth / 2,
-                      child: Padding(
-                        padding: EdgeInsets.all(11.w),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              item.title,
-                              style: BaseText.blackTextStyle.copyWith(),
-                            ),
-                            SizedBox(height: 40.h),
-                            Text(
-                              timeago.format(time, locale: 'ID'),
+              return InkWell(
+                onTap: () {
+                  toWebview(
+                    WebviewArgument(
+                      title: item.title,
+                      url: item.url,
+                    ),
+                  );
+                },
+                child: Container(
+                  width: ScreenUtil().screenWidth,
+                  child: Row(
+                    children: [
+                      (item.urlToImage.isEmpty || item.urlToImage == '///')
+                          ? Container(
+                              padding: EdgeInsets.only(top: 10.h),
+                              height: 100.h,
+                              width: 125.w,
+                              color: ColorName.lightBackgroundColor,
+                              child: Center(child: Text("Image Not Found")),
                             )
-                          ],
+                          : Container(
+                              padding: EdgeInsets.only(top: 10.h),
+                              height: 100.h,
+                              width: 125.w,
+                              child: Image.network(
+                                item.urlToImage,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                      Container(
+                        height: 130,
+                        width: ScreenUtil().screenWidth / 2,
+                        child: Padding(
+                          padding: EdgeInsets.all(11.w),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 85,
+                                width: ScreenUtil().screenWidth / 2,
+                                child: Text(
+                                  item.title,
+                                  overflow: TextOverflow.fade,
+                                  style: BaseText.blackTextStyle.copyWith(),
+                                ),
+                              ),
+                              // SizedBox(height: 20.h),
+                              Spacer(),
+                              Text(
+                                timeago.format(timeNew, locale: 'ID'),
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
               );
             }),
       ),
       SizedBox(height: 50.h),
     ]);
-  });
+  }
 }

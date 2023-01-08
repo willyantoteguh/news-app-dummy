@@ -25,6 +25,7 @@ dependencies:
   sembast_web: any        
   timeago: ^3.3.0
   textfield_search: ^0.10.0 
+  webview_flutter: ^2.0.12
 
 dev_dependencies:
   flutter_test:
