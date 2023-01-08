@@ -22,7 +22,7 @@ dependencies:
   google_fonts: ^2.1.0
   get_storage: any
   sembast: any
-  sembast_web: any        
+  path_provider: ^2.0.0 
   timeago: ^3.3.0
   textfield_search: ^0.10.0 
   webview_flutter: ^2.0.12

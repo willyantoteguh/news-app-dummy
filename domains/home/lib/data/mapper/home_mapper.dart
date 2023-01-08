@@ -32,4 +32,15 @@ class HomeMapper {
         pageSize: homeRequestEntity.pageSize,
         page: homeRequestEntity.page,
       );
+
+  ArticleEntity mapArticleDtoToArticleEntity(Article article) {
+    return ArticleEntity(
+        author: article.author ?? '',
+        title: article.title ?? '',
+        description: article.description ?? '',
+        url: article.url ?? '',
+        urlToImage: article.urlToImage ?? '',
+        publishedAt: article.publishedAt ?? '',
+        content: article.content ?? '');
+  }
 }
