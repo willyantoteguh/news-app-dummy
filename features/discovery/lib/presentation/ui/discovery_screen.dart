@@ -8,13 +8,15 @@ import 'package:component/selectable/selectable_button.dart';
 import 'package:dependencies/bloc/bloc.dart';
 import 'package:dependencies/screenutil/flutter_screenutil.dart';
 import 'package:dependencies/textfield_search/use_textfield_search.dart';
+import 'package:discovery/presentation/ui/widgets/build_tile_news.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:home/domains/entity/request/home_request_entity.dart';
 import 'package:home/domains/entity/static/news_category.dart';
 import 'package:home_feature/presentation/category_bloc/bloc.dart';
-import 'package:dependencies/timeago/timeago_formater.dart' as timeago;
 import 'package:theme/theme/new_theme.dart';
+
+import 'widgets/build_search_field.dart';
 
 class DiscoveryScreen extends StatefulWidget {
   const DiscoveryScreen({Key? key}) : super(key: key);
@@ -84,71 +86,12 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with BaseHome {
                   SizedBox(
                     height: 10.h,
                   ),
-                  Container(
-                    margin: EdgeInsets.only(left: 10.w, right: 10.w, bottom: 5.h, top: 5.h),
-                    height: 45,
-                    width: double.infinity,
-                    child: Form(
-                      key: key,
-                      child: TextFormField(
-                        keyboardType: TextInputType.text,
-                        // autovalidateMode: AutovalidateMode.onUserInteraction,
-                        onChanged: (value) {
-                          setState(() {
-                            query = searchController.text;
-                            log("onChanged: $query");
-                          });
-                        },
-                        // getSelectedValue: (item) {
-                        //   log(item);
-                        // },
-                        controller: searchController,
-                        decoration: InputDecoration(
-                            prefixIcon: Icon(
-                              CupertinoIcons.search,
-                              size: 15,
-                              color: ColorName.redColor,
-                            ),
-                            prefixIconColor: ColorName.redColor,
-                            suffixIcon: (searchController.text.toString() != '' || searchController.text.isNotEmpty)
-                                ? InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        searchController.clear();
-
-                                        clearData();
-                                      });
-                                    },
-                                    child: Icon(
-                                      CupertinoIcons.clear_circled,
-                                      size: 15,
-                                      color: ColorName.redColor,
-                                    ))
-                                : null,
-                            contentPadding: EdgeInsets.all(6.w),
-                            hintText: " News Title Here",
-                            hintStyle: BaseText.greyTextStyle.copyWith(fontSize: 14.sp),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                color: ColorName.redColor,
-                              ),
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                color: ColorName.redColor,
-                              ),
-                            ),
-                            focusColor: ColorName.redColor,
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: ColorName.redColor,
-                                  width: 1,
-                                ),
-                                borderRadius: BorderRadius.circular(10))),
-                      ),
-                    ),
+                  BuildSearchField(
+                    onSearch,
+                    queryKey: query,
+                    keySearch: key,
+                    controller: searchController,
+                    clearData: clearData,
                   ),
 
                   //// Result View
@@ -182,59 +125,12 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with BaseHome {
                                               WebviewArgument(
                                                 title: item.title,
                                                 url: item.url,
+                                                urlToImage: item.urlToImage,
+                                                publishedAt: item.publishedAt,
                                               ),
                                             );
                                           },
-                                          child: Container(
-                                            margin: EdgeInsets.only(bottom: 20.h),
-                                            child: Row(
-                                              children: [
-                                                (item.urlToImage.isEmpty || item.urlToImage == '///')
-                                                    ? Container(
-                                                        padding: EdgeInsets.only(top: 10.h),
-                                                        height: 100.h,
-                                                        width: 125.w,
-                                                        color: ColorName.lightBackgroundColor,
-                                                        child: Center(child: Text("Image Not Found")),
-                                                      )
-                                                    : Container(
-                                                        padding: EdgeInsets.only(top: 10.h),
-                                                        height: 100.h,
-                                                        width: 125.w,
-                                                        child: Image.network(
-                                                          item.urlToImage,
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
-                                                Container(
-                                                  height: 130,
-                                                  width: ScreenUtil().screenWidth / 2,
-                                                  child: Padding(
-                                                    padding: EdgeInsets.all(11.w),
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        SizedBox(
-                                                          height: 85,
-                                                          width: ScreenUtil().screenWidth / 2,
-                                                          child: Text(
-                                                            item.title,
-                                                            overflow: TextOverflow.fade,
-                                                            style: BaseText.blackTextStyle.copyWith(),
-                                                          ),
-                                                        ),
-                                                        // SizedBox(height: 20.h),
-                                                        Spacer(),
-                                                        Text(
-                                                          timeago.format(timeNew, locale: 'ID'),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
+                                          child: BuildTitleNews(item: item, timeNew: timeNew),
                                         );
                                       }
                                     }),
@@ -318,6 +214,8 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with BaseHome {
     isAnyResult = false;
     searchController.clear();
   }
+
+  void onSearch() {}
 
   void selectCategory(String value) {
     if (category.contains(value)) {

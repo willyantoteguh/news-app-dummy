@@ -18,6 +18,8 @@ dependencies:
   # Feature
   discovery:
     path: ../../features/discovery  
+  favorite:
+    path: ../../features/favorite  
 
   common:
     path: ../../shared/common

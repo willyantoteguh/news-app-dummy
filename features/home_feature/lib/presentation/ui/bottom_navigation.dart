@@ -1,5 +1,6 @@
 import 'package:dependencies/bloc/bloc.dart';
 import 'package:discovery/presentation/ui/discovery_screen.dart';
+import 'package:favorite/presentation/ui/favorite_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -23,9 +24,7 @@ class BottomNavigation extends StatelessWidget {
             children: [
               HomeScreen(),
               DiscoveryScreen(),
-              Center(
-                child: Text('Favorite'),
-              ),
+              FavoriteScreen(),
             ],
           ),
         ),

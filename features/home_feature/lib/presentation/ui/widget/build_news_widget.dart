@@ -167,6 +167,8 @@ class _BuildNewsWidgetState extends State<BuildNewsWidget> with BaseHome {
                     WebviewArgument(
                       title: item.title,
                       url: item.url,
+                      urlToImage: item.urlToImage,
+                      publishedAt: item.publishedAt,
                     ),
                   );
                 },

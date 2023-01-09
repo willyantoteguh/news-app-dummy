@@ -5,6 +5,7 @@ import 'package:common/utils/navigation/router/app_routes.dart';
 import 'package:dependencies/bloc/bloc.dart';
 import 'package:dependencies/get_it/get_it.dart';
 import 'package:dependencies/screenutil/flutter_screenutil.dart';
+import 'package:favorite/presentation/bloc/favorite_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:home_feature/presentation/category_bloc/bloc.dart';
 import 'package:home_feature/presentation/home_bloc/home_cubit.dart';
@@ -24,6 +25,13 @@ class NewsApp extends StatelessWidget {
         home: MultiBlocProvider(providers: [
           BlocProvider(create: (_) => HomeCubit()),
           BlocProvider(
+            create: (_) => FavoriteCubit(
+              storeFavoriteNewsUseCase: sl(),
+              deleteFavoriteNewsUseCase: sl(),
+              getAllFavoriteNewsUseCase: sl(),
+            ),
+          ),
+          BlocProvider(
               create: (_) => CategoryCubit(
                     getHeadlineNewsUseCase: sl(),
                     getBisnisNewsUseCase: sl(),
@@ -38,7 +46,14 @@ class NewsApp extends StatelessWidget {
           switch (settings.name) {
             case AppRoutes.article:
               return MaterialPageRoute(
-                builder: (_) => WebViewScreen(argument: argument as WebviewArgument),
+                builder: (_) => BlocProvider(
+                  create: (_) => FavoriteCubit(
+                    deleteFavoriteNewsUseCase: sl(),
+                    storeFavoriteNewsUseCase: sl(),
+                    getAllFavoriteNewsUseCase: sl(),
+                  ),
+                  child: WebViewScreen(argument: argument as WebviewArgument),
+                ),
               );
           }
         },

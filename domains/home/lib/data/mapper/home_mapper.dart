@@ -43,4 +43,15 @@ class HomeMapper {
         publishedAt: article.publishedAt ?? '',
         content: article.content ?? '');
   }
+
+  Article mapArticleEntityToArticleDto(ArticleEntity articleEntity) {
+    return Article(
+        author: articleEntity.author,
+        title: articleEntity.title,
+        description: articleEntity.description,
+        url: articleEntity.url,
+        urlToImage: articleEntity.urlToImage,
+        publishedAt: articleEntity.publishedAt,
+        content: articleEntity.content);
+  }
 }

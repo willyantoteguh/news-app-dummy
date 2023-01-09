@@ -42,6 +42,9 @@ dependencies:
   # Features
   home_feature:
     path: features/home_feature
+  favorite:
+    path: features/favorite
+
   
   # Shared 
   common:

@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:common/utils/constants/app_constants.dart';
 import 'package:dependencies/dio/dio.dart';
 import 'package:home/data/mapper/home_mapper.dart';
+import 'package:home/data/models/response/home_response_dto.dart';
+import 'package:home/data/source/local/home_local_datasource.dart';
 import 'package:home/data/source/remote/home_remote_datasource.dart';
 import 'package:home/domains/entity/response/article_entity.dart';
 import 'package:dartz/dartz.dart';
@@ -11,9 +15,10 @@ import '../../domains/entity/request/home_request_entity.dart';
 
 class HomeRepositoryImpl implements HomeRepository {
   final HomeRemoteDataSource homeRemoteDataSource;
+  final HomeLocalDataSource homeLocalDataSource;
   final HomeMapper mapper;
 
-  HomeRepositoryImpl({required this.homeRemoteDataSource, required this.mapper});
+  HomeRepositoryImpl({required this.homeRemoteDataSource, required this.homeLocalDataSource, required this.mapper});
 
   @override
   Future<Either<FailureResponse, List<ArticleEntity>>> getAllNews({required HomeRequestEntity homeRequestEntity}) async {
@@ -99,4 +104,49 @@ class HomeRepositoryImpl implements HomeRepository {
       );
     }
   }
+
+  @override
+  Future<Either<FailureResponse, dynamic>> storeFavorite(ArticleEntity articleEntity) async {
+    try {
+      final data = mapper.mapArticleEntityToArticleDto(articleEntity);
+      final response = homeLocalDataSource.insert(data);
+      log("from response impl: ${response.toString()}");
+      log("data in impl: ${data.toJson().toString()}");
+      return Right(response);
+    } catch (e) {
+      log('failure impl');
+      return Left(FailureResponse(errorMessage: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<FailureResponse, dynamic>> deleteFavorite(ArticleEntity articleEntity) async {
+    try {
+      final data = mapper.mapArticleEntityToArticleDto(articleEntity);
+      final response = homeLocalDataSource.delete(data);
+
+      return Right(response);
+    } catch (e) {
+      return Left(FailureResponse(errorMessage: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<FailureResponse, List<ArticleEntity>>> getAllFavorite() async {
+    try {
+      final getList = await homeLocalDataSource.getAllData();
+      List<Article> data = getList;
+      final response = mapper.mapListArticleDtoToEntity(data);
+      log("from all fav impl: ${response.map((e) => e.publishedAt).toList().toString()}");
+
+      return Right(response);
+    } catch (e) {
+      return Left(FailureResponse(errorMessage: e.toString()));
+    }
+  }
+
+  // @override
+  // storeFavorite({required ArticleEntity articleEntity}) {
+  //   mapper.mapArticleEntityToArticleDto(articleEntity);
+  // }
 }
