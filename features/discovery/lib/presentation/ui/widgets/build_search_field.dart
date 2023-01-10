@@ -6,22 +6,28 @@ import 'package:flutter/material.dart';
 import 'package:theme/theme/new_theme.dart';
 
 class BuildSearchField extends StatefulWidget {
+  BuildContext context;
+
+  dynamic favoriteState;
+
   String queryKey;
 
   dynamic keySearch;
 
   TextEditingController controller;
 
-  void Function() clearData;
+  dynamic clearData;
 
-  void Function() onSearch;
+  dynamic onSearch;
 
   BuildSearchField(
-    this.onSearch, {
+    this.context,
+    this.favoriteState, {
     Key? key,
     required this.queryKey,
     required this.keySearch,
     required this.controller,
+    required this.onSearch,
     required this.clearData,
   }) : super(key: key);
 

@@ -86,16 +86,6 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with BaseHome {
                   SizedBox(
                     height: 10.h,
                   ),
-                  BuildSearchField(
-                    onSearch,
-                    queryKey: query,
-                    keySearch: key,
-                    controller: searchController,
-                    clearData: clearData,
-                  ),
-
-                  //// Result View
-                  SizedBox(height: 10.h),
                   (isAnyResult == true)
                       ? BlocBuilder<CategoryCubit, CategoryState>(builder: (context, state) {
                           final status = state.semuaState.status;
@@ -103,6 +93,18 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> with BaseHome {
 
                           return Column(
                             children: [
+                              BuildSearchField(
+                                context,
+                                state,
+                                queryKey: query,
+                                keySearch: key,
+                                onSearch: onSearch,
+                                controller: searchController,
+                                clearData: clearData,
+                              ),
+
+                              //// Result View
+                              SizedBox(height: 10.h),
                               Container(
                                 width: ScreenUtil().screenWidth,
                                 margin: EdgeInsets.only(left: 10.w, right: 10.w),
